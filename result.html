@@ -13,14 +13,19 @@
   </div>
 
   <script>
-    const data = JSON.parse(localStorage.getItem("formData"));
+    const savedData = localStorage.getItem("formData");
     const resultDiv = document.getElementById("result");
 
-    for(const key in data){
-      const div = document.createElement("div");
-      div.className = "item";
-      div.innerHTML = `<strong>${key}:</strong> ${data[key] || "N/A"}`;
-      resultDiv.appendChild(div);
+    if (!savedData) {
+      resultDiv.innerHTML = "<p>No submission data found. Please fill out the form first.</p>";
+    } else {
+      const data = JSON.parse(savedData);
+      for(const key in data){
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `<strong>${key}:</strong> ${data[key] || "N/A"}`;
+        resultDiv.appendChild(div);
+      }
     }
 
     // Optional: clear localStorage after viewing

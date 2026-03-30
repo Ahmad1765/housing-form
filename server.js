@@ -8,7 +8,12 @@ const app = express();
 app.use(bodyParser.json());
 app.use(express.static(__dirname));
 
-const FILE_PATH = "data.xlsx";
+// Explicit route for the root to ensure index.html serves correctly
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "index.html"));
+});
+
+const FILE_PATH = path.join(__dirname, "data.xlsx");
 
 app.post("/submit", (req, res) => {
     let data = [];
