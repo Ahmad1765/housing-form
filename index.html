@@ -178,10 +178,21 @@
     toggleDetails("arrears", "arrearsDetails");
 
     // Form submit
-    document.getElementById("disrepairForm").addEventListener("submit", function(e){
+    document.getElementById("disrepairForm").addEventListener("submit", async function(e){
       e.preventDefault();
       const formData = new FormData(this);
       const data = Object.fromEntries(formData.entries());
+      
+      try {
+        await fetch('/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+      } catch (err) {
+        console.error("Failed to submit to backend", err);
+      }
+
       localStorage.setItem("formData", JSON.stringify(data));
       window.location.href = "result.html";
     });

@@ -34,4 +34,14 @@ app.get("/export", (req, res) => {
     res.download(FILE_PATH);
 });
 
+app.get("/api/data", (req, res) => {
+    let data = [];
+    if (fs.existsSync(FILE_PATH)) {
+        const workbook = XLSX.readFile(FILE_PATH);
+        const sheet = workbook.Sheets["Sheet1"];
+        data = XLSX.utils.sheet_to_json(sheet);
+    }
+    res.json(data);
+});
+
 app.listen(3000, () => console.log("Server running on http://localhost:3000"));

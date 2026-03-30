@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Disrepair Forms</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="admin-body">
+  <div class="admin-container">
+    <div class="admin-header">
+      <h2>Housing Form Submissions <span class="badge">Admin</span></h2>
+      <a href="/export" class="btn-download">
+        Download Data.xlsx
+      </a>
+    </div>
+
+    <div class="table-wrapper section">
+      <table id="dataTable" class="admin-table">
+        <thead id="tableHead">
+            <!-- Populated dynamically via JS -->
+        </thead>
+        <tbody id="tableBody">
+            <!-- Populated dynamically via JS -->
+        </tbody>
+      </table>
+      <div id="emptyState" class="hidden" style="text-align: center; padding: 20px;">
+        No entries exist. Waiting for submissions.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function loadDashboard() {
+      try {
+        const res = await fetch('/api/data');
+        const data = await res.json();
+        
+        const table = document.getElementById('dataTable');
+        const emptyState = document.getElementById('emptyState');
+        const tableHead = document.getElementById('tableHead');
+        const tableBody = document.getElementById('tableBody');
+
+        if (!data || data.length === 0) {
+          table.style.display = 'none';
+          emptyState.classList.remove('hidden');
+          return;
+        }
+
+        // Generate columns dynamically from keys
+        const columns = Array.from(new Set(data.flatMap(Object.keys)));
+
+        // Inject Headers
+        const trHead = document.createElement("tr");
+        columns.forEach(col => {
+            const th = document.createElement("th");
+            // Standardize camelCase to separated words
+            th.textContent = col.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+            trHead.appendChild(th);
+        });
+        tableHead.appendChild(trHead);
+
+        // Inject Data Rows
+        data.forEach(row => {
+            const tr = document.createElement("tr");
+            columns.forEach(col => {
+                const td = document.createElement("td");
+                td.textContent = row[col] ? row[col] : "-";
+                tr.appendChild(td);
+            });
+            tableBody.appendChild(tr);
+        });
+      } catch (e) {
+        console.error("Dashboard fetch error: ", e);
+      }
+    }
+    document.addEventListener("DOMContentLoaded", loadDashboard);
+  </script>
+</body>
+</html>
