@@ -18,18 +18,15 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 const app = express();
 app.use(bodyParser.json());
 // Middleware for static files - MUST come before catch-all routes
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(path.join(__dirname, "public")));
 
 // Route for root to ensure index.html serves correctly
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// Explicit route for styles (CRITICAL for Vercel/Windows MIME issues)
-app.get("/style.css", (req, res) => {
-  res.setHeader("Content-Type", "text/css");
-  res.sendFile(path.join(__dirname, "style.css"));
-});
+// Vercel routes logic should prioritize static files in 'public/'
+// but we leave Express routes for local testing consistency.
 
 
 // SUBMIT ENDPOINT - Saves data to Supabase
@@ -80,8 +77,8 @@ app.get("/export", async (req, res) => {
 });
 
 // Helper routes
-app.get("/admin", (req, res) => res.sendFile(path.join(__dirname, "admin.html")));
-app.get("/result", (req, res) => res.sendFile(path.join(__dirname, "result.html")));
+app.get("/admin", (req, res) => res.sendFile(path.join(__dirname, "public", "admin.html")));
+app.get("/result", (req, res) => res.sendFile(path.join(__dirname, "public", "result.html")));
 
 // CONDITIONAL STARTUP - Run listen only if not on Vercel
 if (process.env.NODE_ENV !== "production") {

@@ -6,19 +6,19 @@
       "use": "@vercel/node"
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/style.css",
-      "dest": "/style.css"
+      "comment": "Let Vercel handle static files automatically from 'public' folder",
+      "source": "/style.css",
+      "destination": "/style.css"
     },
     {
-      "src": "/(index.html|admin.html|result.html)",
-      "dest": "/$1"
+      "source": "/(submit|api|export|admin|result)",
+      "destination": "/server.js"
     },
     {
-      "src": "/(.*)",
-      "dest": "server.js"
+      "source": "/",
+      "destination": "/server.js"
     }
   ]
-
 }
