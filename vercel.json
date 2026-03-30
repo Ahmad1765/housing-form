@@ -8,7 +8,6 @@
   ],
   "rewrites": [
     {
-      "comment": "Let Vercel handle static files automatically from 'public' folder",
       "source": "/style.css",
       "destination": "/style.css"
     },
