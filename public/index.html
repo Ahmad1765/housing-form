@@ -95,7 +95,7 @@
       </div>
     </div>
 
-    <!-- Electrics / Heating / Structural -->
+      <!-- Electrics / Heating / Structural -->
     <div class="section">
       <label>Is there any cracks/damages, faulty electrics or heating issues in the property?</label>
       <select name="issues" id="issues" required>
@@ -105,14 +105,76 @@
       </select>
 
       <div id="issuesDetails" class="hidden">
-        <label>If Faulty Electrics – what is the issue?</label>
-        <input type="text" name="electricsIssue">
+        <label style="margin-top: 15px; font-weight: bold;">Select issue type(s):</label>
+        
+        <div style="margin-top: 10px;">
+          <input type="checkbox" name="issueType" value="Faulty Electrics" id="check_electrics">
+          <label for="check_electrics" style="display: inline; font-weight: normal; margin-left: 5px;">Faulty Electrics</label>
+        </div>
 
-        <label>If Heating / Boiler Issues – what is the issue?</label>
-        <input type="text" name="heatingIssue">
+        <div id="electricsQuestions" class="hidden" style="margin-left: 20px; margin-top: 15px; padding: 10px; background-color: #f9f9f9; border-left: 3px solid #ff6b6b;">
+          <label>What is the issue with the electrics?</label>
+          <input type="text" name="electricsMainIssue" placeholder="Describe the electrical issue">
 
-        <label>If Cracks / Structural Damage – where are they located?</label>
-        <input type="text" name="structuralLocation">
+          <label>Do lights flicker or stop working?</label>
+          <input type="text" name="electricsLights" placeholder="Yes/No - describe if yes">
+
+          <label>Do sockets not work?</label>
+          <input type="text" name="electricsSockets" placeholder="Yes/No - which sockets affected">
+
+          <label>Any exposed wires or sparks?</label>
+          <input type="text" name="electricsExposed" placeholder="Yes/No - describe location">
+
+          <label>Does the fuse box trip often?</label>
+          <input type="text" name="electricsFuseBox" placeholder="Yes/No - how often">
+
+          <label>Has this caused any danger or injury?</label>
+          <input type="text" name="electricsDanger" placeholder="Yes/No - describe any incidents">
+        </div>
+
+        <div style="margin-top: 15px;">
+          <input type="checkbox" name="issueType" value="Heating / Boiler Issues" id="check_heating">
+          <label for="check_heating" style="display: inline; font-weight: normal; margin-left: 5px;">Heating / Boiler Issues</label>
+        </div>
+
+        <div id="heatingQuestions" class="hidden" style="margin-left: 20px; margin-top: 15px; padding: 10px; background-color: #f9f9f9; border-left: 3px solid #4c6ef5;">
+          <label>What is the issue with the boiler?</label>
+          <input type="text" name="heatingMainIssue" placeholder="Describe the boiler/heating issue">
+
+          <label>Do you have no heating, no hot water, or both?</label>
+          <input type="text" name="heatingType" placeholder="Heating/Hot Water/Both">
+
+          <label>Does it work sometimes or not at all?</label>
+          <input type="text" name="heatingFrequency" placeholder="Sometimes/Not at all">
+
+          <label>How long has this been going on?</label>
+          <input type="text" name="heatingDuration" placeholder="Duration (e.g., 2 weeks, 1 month)">
+
+          <label>Is it happening daily?</label>
+          <input type="text" name="heatingDaily" placeholder="Yes/No - describe pattern">
+
+          <label>Has it affected your health due to cold?</label>
+          <input type="text" name="heatingHealth" placeholder="Yes/No - describe health impacts">
+        </div>
+
+        <div style="margin-top: 15px;">
+          <input type="checkbox" name="issueType" value="Cracks / Structural Damage" id="check_structural">
+          <label for="check_structural" style="display: inline; font-weight: normal; margin-left: 5px;">Cracks / Structural Damage</label>
+        </div>
+
+        <div id="structuralQuestions" class="hidden" style="margin-left: 20px; margin-top: 15px; padding: 10px; background-color: #f9f9f9; border-left: 3px solid #12b886;">
+          <label>Where are the cracks or damages located?</label>
+          <input type="text" name="structuralLocation" placeholder="Room(s) and specific area(s)">
+
+          <label>How severe are they?</label>
+          <input type="text" name="structuralSeverity" placeholder="Minor/Moderate/Severe - describe">
+
+          <label>When did you first notice them?</label>
+          <input type="text" name="structuralWhen" placeholder="Date or timeframe">
+
+          <label>Are they getting worse over time?</label>
+          <input type="text" name="structuralWorsening" placeholder="Yes/No - describe changes">
+        </div>
       </div>
     </div>
 
