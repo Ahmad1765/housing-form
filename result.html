@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Submission Result</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="result-container">
+    <h1>Form Submission Details</h1>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const data = JSON.parse(localStorage.getItem("formData"));
+    const resultDiv = document.getElementById("result");
+
+    for(const key in data){
+      const div = document.createElement("div");
+      div.className = "item";
+      div.innerHTML = `<strong>${key}:</strong> ${data[key] || "N/A"}`;
+      resultDiv.appendChild(div);
+    }
+
+    // Optional: clear localStorage after viewing
+    // localStorage.removeItem("formData");
+  </script>
+</body>
+</html>

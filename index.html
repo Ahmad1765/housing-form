@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Housing Disrepair Form</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Housing Disrepair Form</h1>
+  <form id="disrepairForm">
+
+    <!-- Basic Details -->
+    <div class="section">
+      <label>Name</label>
+      <input type="text" name="name" required>
+
+      <label>Phone Number</label>
+      <input type="text" name="phone" required>
+
+      <label>Address</label>
+      <textarea name="address" rows="2" required></textarea>
+
+      <label>Are you a council tenant or a housing association tenant?</label>
+      <select name="tenantType" required>
+        <option value="">Select</option>
+        <option value="Council Tenant">Council Tenant</option>
+        <option value="Housing Association Tenant">Housing Association Tenant</option>
+      </select>
+
+      <label>How long have you been living in the property?</label>
+      <input type="text" name="livingDuration" required>
+    </div>
+
+    <!-- Damp / Mould -->
+    <div class="section">
+      <label>Is there any damp or mould in the property?</label>
+      <select name="damp" id="damp" required>
+        <option value="">Select</option>
+        <option value="No">No</option>
+        <option value="Yes">Yes</option>
+      </select>
+
+      <div id="dampDetails" class="hidden">
+        <label>Where exactly is the damp or mould located?</label>
+        <input type="text" name="dampLocation">
+
+        <label>How many rooms are affected?</label>
+        <input type="text" name="dampRooms">
+
+        <label>Is it on the walls, ceiling, or floor?</label>
+        <input type="text" name="dampSurface">
+
+        <label>How long have you had this issue?</label>
+        <input type="text" name="dampDuration">
+
+        <label>Do you know what caused it (leak, rain, pipe, roof)?</label>
+        <input type="text" name="dampCause">
+
+        <label>Has it damaged any belongings (bed, sofa, clothes, etc.)?</label>
+        <input type="text" name="dampDamage">
+
+        <label>Has it caused any health problems (breathing, asthma, allergies, skin issues)?</label>
+        <input type="text" name="dampHealth">
+      </div>
+    </div>
+
+    <!-- Leaks -->
+    <div class="section">
+      <label>Do you have any leaks in the property?</label>
+      <select name="leak" id="leak" required>
+        <option value="">Select</option>
+        <option value="No">No</option>
+        <option value="Yes">Yes</option>
+      </select>
+
+      <div id="leakDetails" class="hidden">
+        <label>Where is the leak coming from?</label>
+        <input type="text" name="leakLocation">
+
+        <label>Is it from the roof, ceiling, pipe, bathroom, or kitchen?</label>
+        <input type="text" name="leakSource">
+
+        <label>When did the leak start? Is it still ongoing?</label>
+        <input type="text" name="leakStart">
+
+        <label>Has it caused damage to walls, ceiling, or floor?</label>
+        <input type="text" name="leakDamage">
+
+        <label>Any cracks or structural damage?</label>
+        <input type="text" name="leakCracks">
+
+        <label>Has it damaged your belongings?</label>
+        <input type="text" name="leakBelongings">
+      </div>
+    </div>
+
+    <!-- Electrics / Heating / Structural -->
+    <div class="section">
+      <label>Is there any cracks/damages, faulty electrics or heating issues in the property?</label>
+      <select name="issues" id="issues" required>
+        <option value="">Select</option>
+        <option value="No">No</option>
+        <option value="Yes">Yes</option>
+      </select>
+
+      <div id="issuesDetails" class="hidden">
+        <label>If Faulty Electrics – what is the issue?</label>
+        <input type="text" name="electricsIssue">
+
+        <label>If Heating / Boiler Issues – what is the issue?</label>
+        <input type="text" name="heatingIssue">
+
+        <label>If Cracks / Structural Damage – where are they located?</label>
+        <input type="text" name="structuralLocation">
+      </div>
+    </div>
+
+    <!-- Reporting -->
+    <div class="section">
+      <label>Have you reported all the disrepairs over a month ago and have no date for it to be fixed?</label>
+      <select name="reported" id="reported" required>
+        <option value="">Select</option>
+        <option value="No">No</option>
+        <option value="Yes">Yes</option>
+      </select>
+
+      <div id="reportedDetails" class="hidden">
+        <label>How many times have you notified your landlord? Was it through email, text, or calls?</label>
+        <input type="text" name="reportCount">
+
+        <label>When did you first report the issue?</label>
+        <input type="text" name="reportFirst">
+
+        <label>Did the landlord or council respond?</label>
+        <input type="text" name="reportResponse">
+
+        <label>Did they attempt any repairs?</label>
+        <input type="text" name="reportAttempt">
+
+        <label>Is the issue still not resolved?</label>
+        <input type="text" name="reportStatus">
+      </div>
+    </div>
+
+    <!-- Rental arrears -->
+    <div class="section">
+      <label>Are you in rental arrears? (Must be less than £1000)</label>
+      <select name="arrears" id="arrears" required>
+        <option value="">Select</option>
+        <option value="No">No</option>
+        <option value="Yes">Yes</option>
+      </select>
+
+      <div id="arrearsDetails" class="hidden">
+        <label>If YES – confirm amount:</label>
+        <input type="text" name="arrearsAmount">
+      </div>
+    </div>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    // Show/hide details based on Yes/No
+    function toggleDetails(selectId, detailId){
+      const select = document.getElementById(selectId);
+      const details = document.getElementById(detailId);
+      select.addEventListener("change", () => {
+        details.classList.toggle("hidden", select.value !== "Yes");
+      });
+    }
+
+    toggleDetails("damp", "dampDetails");
+    toggleDetails("leak", "leakDetails");
+    toggleDetails("issues", "issuesDetails");
+    toggleDetails("reported", "reportedDetails");
+    toggleDetails("arrears", "arrearsDetails");
+
+    // Form submit
+    document.getElementById("disrepairForm").addEventListener("submit", function(e){
+      e.preventDefault();
+      const formData = new FormData(this);
+      const data = Object.fromEntries(formData.entries());
+      localStorage.setItem("formData", JSON.stringify(data));
+      window.location.href = "result.html";
+    });
+  </script>
+</body>
+</html>
