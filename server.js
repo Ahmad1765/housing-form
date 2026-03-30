@@ -30,6 +30,14 @@ app.post("/submit", (req, res) => {
     res.json({ message: "Saved successfully" });
 });
 
+app.get("/admin", (req, res) => {
+    res.sendFile(path.join(__dirname, "admin.html"));
+});
+
+app.get("/result", (req, res) => {
+    res.sendFile(path.join(__dirname, "result.html"));
+});
+
 app.get("/export", (req, res) => {
     res.download(FILE_PATH);
 });
