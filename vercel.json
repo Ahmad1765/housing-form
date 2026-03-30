@@ -8,7 +8,11 @@
   ],
   "routes": [
     {
-      "src": "/(style.css|index.html|admin.html|result.html)",
+      "src": "/style.css",
+      "dest": "/style.css"
+    },
+    {
+      "src": "/(index.html|admin.html|result.html)",
       "dest": "/$1"
     },
     {
@@ -16,4 +20,5 @@
       "dest": "server.js"
     }
   ]
+
 }
