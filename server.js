@@ -13,6 +13,12 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "index.html"));
 });
 
+// Explicit route for styles to bypass Windows MIME registry corruption
+app.get("/style.css", (req, res) => {
+    res.setHeader("Content-Type", "text/css");
+    res.sendFile(path.join(__dirname, "style.css"));
+});
+
 const FILE_PATH = path.join(__dirname, "data.xlsx");
 
 app.post("/submit", (req, res) => {
