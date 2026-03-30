@@ -13,23 +13,50 @@
   </div>
 
   <script>
+    const FIELD_LABELS = {
+      name: "Name", phone: "Phone Number", address: "Address",
+      tenantType: "Tenant Type", livingDuration: "Living Duration",
+      damp: "Damp/Mould?", dampLocation: "Damp Location", dampRooms: "Rooms Affected",
+      dampSurface: "Surface Type", dampDuration: "Damp Duration", dampCause: "Damp Cause",
+      dampDamage: "Belongings Damaged (Damp)", dampHealth: "Health Problems (Damp)",
+      leak: "Leaks?", leakLocation: "Leak Location", leakSource: "Leak Source",
+      leakStart: "Leak Start Date", leakDamage: "Structural Damage (Leak)",
+      leakCracks: "Cracks (Leak)", leakBelongings: "Belongings Damaged (Leak)",
+      issues: "Electrical/Heating/Structural Issues?", electricsIssue: "Electrics Issue",
+      heatingIssue: "Heating Issue", structuralLocation: "Structural Damage Location",
+      reported: "Reported to Landlord?", reportCount: "Number of Reports",
+      reportFirst: "First Report Date", reportResponse: "Landlord Response",
+      reportAttempt: "Repair Attempts", reportStatus: "Current Status",
+      arrears: "In Rental Arrears?", arrearsAmount: "Arrears Amount"
+    };
+
     const savedData = localStorage.getItem("formData");
     const resultDiv = document.getElementById("result");
 
     if (!savedData) {
-      resultDiv.innerHTML = "<p>No submission data found. Please fill out the form first.</p>";
+      const p = document.createElement("p");
+      p.textContent = "No submission data found. Please fill out the form first.";
+      resultDiv.appendChild(p);
     } else {
       const data = JSON.parse(savedData);
-      for(const key in data){
+      for (const key in data) {
+        if (!data[key]) continue; // skip empty fields
         const div = document.createElement("div");
         div.className = "item";
-        div.innerHTML = `<strong>${key}:</strong> ${data[key] || "N/A"}`;
+
+        const label = document.createElement("strong");
+        label.textContent = (FIELD_LABELS[key] || key.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase())) + ": ";
+
+        const value = document.createElement("span");
+        value.textContent = data[key];
+
+        div.appendChild(label);
+        div.appendChild(value);
         resultDiv.appendChild(div);
       }
+      // Clear after displaying so stale data doesn't show on next visit
+      localStorage.removeItem("formData");
     }
-
-    // Optional: clear localStorage after viewing
-    // localStorage.removeItem("formData");
   </script>
 </body>
 </html>

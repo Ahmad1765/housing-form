@@ -10,71 +10,194 @@
   <div class="admin-container">
     <div class="admin-header">
       <h2>Housing Form Submissions <span class="badge">Admin</span></h2>
-      <a href="/export" class="btn-download">
-        Download Data.xlsx
-      </a>
-    </div>
-
-    <div class="table-wrapper section">
-      <table id="dataTable" class="admin-table">
-        <thead id="tableHead">
-            <!-- Populated dynamically via JS -->
-        </thead>
-        <tbody id="tableBody">
-            <!-- Populated dynamically via JS -->
-        </tbody>
-      </table>
-      <div id="emptyState" class="hidden" style="text-align: center; padding: 20px;">
-        No entries exist. Waiting for submissions.
+      <div class="admin-header-right">
+        <span class="live-badge">● LIVE</span>
+        <span id="lastUpdated" class="meta-text"></span>
+        <span id="submissionCount" class="meta-text"></span>
+        <a href="/export" class="btn-download">Download Data.xlsx</a>
       </div>
     </div>
+
+    <div id="errorMsg" class="hidden error-banner">Failed to load data. Retrying in 5 seconds...</div>
+    <div id="emptyState" class="hidden empty-state">No submissions yet. Waiting for entries...</div>
+    <div id="cardsContainer"></div>
   </div>
 
   <script>
+    const FIELD_LABELS = {
+      name: "Name", phone: "Phone Number", address: "Address",
+      tenantType: "Tenant Type", livingDuration: "Living Duration",
+      damp: "Damp/Mould?", dampLocation: "Damp Location", dampRooms: "Rooms Affected",
+      dampSurface: "Surface Type", dampDuration: "Damp Duration", dampCause: "Damp Cause",
+      dampDamage: "Belongings Damaged (Damp)", dampHealth: "Health Problems (Damp)",
+      leak: "Leaks?", leakLocation: "Leak Location", leakSource: "Leak Source",
+      leakStart: "Leak Start Date", leakDamage: "Structural Damage (Leak)",
+      leakCracks: "Cracks (Leak)", leakBelongings: "Belongings Damaged (Leak)",
+      issues: "Electrical/Heating/Structural Issues?", electricsIssue: "Electrics Issue",
+      heatingIssue: "Heating Issue", structuralLocation: "Structural Damage Location",
+      reported: "Reported to Landlord?", reportCount: "Number of Reports",
+      reportFirst: "First Report Date", reportResponse: "Landlord Response",
+      reportAttempt: "Repair Attempts", reportStatus: "Current Status",
+      arrears: "In Rental Arrears?", arrearsAmount: "Arrears Amount"
+    };
+
+    const SUMMARY_FIELDS = new Set(["id", "created_at", "name", "phone", "address", "tenantType", "livingDuration"]);
+
+    function formatKey(key) {
+      return FIELD_LABELS[key] || key.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase());
+    }
+
+    function formatDate(iso) {
+      if (!iso) return "-";
+      return new Date(iso).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" });
+    }
+
+    let knownIds = new Set();
+    let isFirstLoad = true;
+
     async function loadDashboard() {
       try {
-        const res = await fetch('/api/data?t=' + new Date().getTime());
+        const res = await fetch('/api/data?t=' + Date.now());
+        if (!res.ok) throw new Error("HTTP " + res.status);
         const data = await res.json();
-        
-        const table = document.getElementById('dataTable');
-        const emptyState = document.getElementById('emptyState');
-        const tableHead = document.getElementById('tableHead');
-        const tableBody = document.getElementById('tableBody');
+
+        document.getElementById("errorMsg").classList.add("hidden");
+
+        const container = document.getElementById("cardsContainer");
+        const emptyState = document.getElementById("emptyState");
+        document.getElementById("lastUpdated").textContent = "Updated: " + new Date().toLocaleTimeString("en-GB");
 
         if (!data || data.length === 0) {
-          table.style.display = 'none';
-          emptyState.classList.remove('hidden');
+          emptyState.classList.remove("hidden");
+          container.innerHTML = "";
+          document.getElementById("submissionCount").textContent = "";
+          knownIds = new Set();
+          isFirstLoad = false;
           return;
         }
 
-        // Generate columns dynamically from keys
-        const columns = Array.from(new Set(data.flatMap(Object.keys)));
+        emptyState.classList.add("hidden");
+        document.getElementById("submissionCount").textContent =
+          data.length + " submission" + (data.length !== 1 ? "s" : "");
 
-        // Inject Headers
-        const trHead = document.createElement("tr");
-        columns.forEach(col => {
-            const th = document.createElement("th");
-            // Standardize camelCase to separated words
-            th.textContent = col.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
-            trHead.appendChild(th);
-        });
-        tableHead.appendChild(trHead);
+        // Find IDs that are new since last poll
+        const incomingIds = new Set(data.map(r => r.id));
+        const newIds = isFirstLoad ? new Set() : new Set([...incomingIds].filter(id => !knownIds.has(id)));
+        knownIds = incomingIds;
+        isFirstLoad = false;
 
-        // Inject Data Rows
+        // Only rebuild DOM if something changed
+        const currentCount = container.querySelectorAll(".submission-card").length;
+        if (currentCount === data.length && newIds.size === 0) return;
+
+        container.innerHTML = "";
+
         data.forEach(row => {
-            const tr = document.createElement("tr");
-            columns.forEach(col => {
-                const td = document.createElement("td");
-                td.textContent = row[col] ? row[col] : "-";
-                tr.appendChild(td);
+          const card = document.createElement("div");
+          card.className = "submission-card" + (newIds.has(row.id) ? " card-new" : "");
+
+          // --- Card Header ---
+          const header = document.createElement("div");
+          header.className = "card-header";
+
+          const titleBlock = document.createElement("div");
+          titleBlock.className = "card-title-block";
+
+          const name = document.createElement("span");
+          name.className = "card-name";
+          name.textContent = row.name || "Unknown";
+
+          const phone = document.createElement("span");
+          phone.className = "card-phone";
+          phone.textContent = row.phone || "-";
+
+          titleBlock.appendChild(name);
+          titleBlock.appendChild(phone);
+
+          const metaBlock = document.createElement("div");
+          metaBlock.className = "card-meta-block";
+
+          const tag = document.createElement("span");
+          tag.className = "tag";
+          tag.textContent = row.tenantType || "Unknown Type";
+
+          const date = document.createElement("span");
+          date.className = "card-date";
+          date.textContent = formatDate(row.created_at);
+
+          metaBlock.appendChild(tag);
+          metaBlock.appendChild(date);
+
+          header.appendChild(titleBlock);
+          header.appendChild(metaBlock);
+
+          // --- Address ---
+          const addr = document.createElement("div");
+          addr.className = "card-address";
+          addr.textContent = row.address || "-";
+
+          // --- Detail rows (non-summary fields) ---
+          const details = document.createElement("div");
+          details.className = "card-details hidden";
+
+          Object.entries(row).forEach(([key, val]) => {
+            if (SUMMARY_FIELDS.has(key) || val === null || val === "" || val === undefined) return;
+            const item = document.createElement("div");
+            item.className = "detail-item";
+
+            const label = document.createElement("span");
+            label.className = "detail-label";
+            label.textContent = formatKey(key);
+
+            const value = document.createElement("span");
+            value.className = "detail-value";
+            value.textContent = val;
+
+            item.appendChild(label);
+            item.appendChild(value);
+            details.appendChild(item);
+          });
+
+          card.appendChild(header);
+          card.appendChild(addr);
+
+          if (row.livingDuration) {
+            const dur = document.createElement("div");
+            dur.className = "card-duration";
+            dur.textContent = "Living there: " + row.livingDuration;
+            card.appendChild(dur);
+          }
+
+          if (details.children.length > 0) {
+            const toggleBtn = document.createElement("button");
+            toggleBtn.className = "btn-toggle";
+            toggleBtn.textContent = "Show Full Details ▾";
+            toggleBtn.addEventListener("click", () => {
+              const hidden = details.classList.toggle("hidden");
+              toggleBtn.textContent = hidden ? "Show Full Details ▾" : "Hide Details ▴";
             });
-            tableBody.appendChild(tr);
+            card.appendChild(toggleBtn);
+            card.appendChild(details);
+          } else {
+            const none = document.createElement("p");
+            none.className = "no-extra";
+            none.textContent = "No additional details provided.";
+            card.appendChild(none);
+          }
+
+          container.appendChild(card);
         });
+
       } catch (e) {
-        console.error("Dashboard fetch error: ", e);
+        console.error("Dashboard fetch error:", e);
+        document.getElementById("errorMsg").classList.remove("hidden");
       }
     }
-    document.addEventListener("DOMContentLoaded", loadDashboard);
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadDashboard();
+      setInterval(loadDashboard, 5000);
+    });
   </script>
 </body>
 </html>

@@ -251,3 +251,204 @@ button:active {
 .admin-table tbody tr:hover {
   background: rgba(255, 255, 255, 0.05);
 }
+
+/* --- Admin Header Right --- */
+.admin-header-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.meta-text {
+  font-size: 0.8rem;
+  opacity: 0.55;
+}
+
+/* --- Live Badge --- */
+.live-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #00e676;
+  letter-spacing: 0.08em;
+  animation: livePulse 2s ease-in-out infinite;
+}
+
+@keyframes livePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* --- Error Banner --- */
+.error-banner {
+  background: rgba(207, 55, 55, 0.18);
+  border: 1px solid rgba(207, 55, 55, 0.45);
+  border-radius: 10px;
+  padding: 12px 20px;
+  margin-bottom: 20px;
+  color: #ff6b6b;
+  font-size: 0.9rem;
+}
+
+/* --- Empty State --- */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  opacity: 0.5;
+  font-size: 1rem;
+}
+
+/* --- Submission Cards --- */
+.submission-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 22px 26px;
+  margin-bottom: 18px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.submission-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.card-new {
+  border-color: #bb86fc;
+  box-shadow: 0 0 0 2px rgba(187, 134, 252, 0.25);
+  animation: cardHighlight 3s ease-out forwards;
+}
+
+@keyframes cardHighlight {
+  0% { background: rgba(187, 134, 252, 0.12); }
+  100% { background: rgba(255, 255, 255, 0.05); }
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.card-title-block {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.card-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.card-phone {
+  font-size: 0.9rem;
+  color: #bb86fc;
+  background: rgba(187, 134, 252, 0.12);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.card-meta-block {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: rgba(55, 0, 179, 0.4);
+  color: #bb86fc;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(187, 134, 252, 0.3);
+}
+
+.card-date {
+  font-size: 0.78rem;
+  opacity: 0.5;
+}
+
+.card-address {
+  font-size: 0.9rem;
+  color: #ccc;
+  margin-bottom: 6px;
+}
+
+.card-duration {
+  font-size: 0.82rem;
+  color: #aaa;
+  margin-bottom: 12px;
+}
+
+/* --- Toggle Button --- */
+.btn-toggle {
+  width: auto;
+  padding: 7px 18px;
+  margin-top: 14px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  color: #ccc;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  box-shadow: none;
+}
+
+.btn-toggle:hover {
+  background: rgba(255, 255, 255, 0.13);
+  transform: none;
+  box-shadow: none;
+  color: #fff;
+}
+
+/* --- Card Details Grid --- */
+.card-details {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 10px;
+}
+
+.detail-item {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.detail-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #bb86fc;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.detail-value {
+  font-size: 0.9rem;
+  color: #e0e0e0;
+  word-break: break-word;
+}
+
+.no-extra {
+  font-size: 0.85rem;
+  opacity: 0.4;
+  margin-top: 10px;
+}
+
+/* --- Form Error Banner --- */
+form .error-banner {
+  margin-top: 12px;
+  margin-bottom: 0;
+}

@@ -158,6 +158,7 @@
       </div>
     </div>
 
+    <div id="submitError" class="hidden error-banner"></div>
     <button type="submit">Submit</button>
   </form>
 
@@ -180,17 +181,33 @@
     // Form submit
     document.getElementById("disrepairForm").addEventListener("submit", async function(e){
       e.preventDefault();
+      const submitBtn = this.querySelector('button[type="submit"]');
+      const errorMsg = document.getElementById("submitError");
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Submitting...";
+      errorMsg.classList.add("hidden");
+
       const formData = new FormData(this);
       const data = Object.fromEntries(formData.entries());
-      
+
       try {
-        await fetch('/submit', {
+        const res = await fetch('/submit', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
         });
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          throw new Error(body.error || "Server error " + res.status);
+        }
       } catch (err) {
         console.error("Failed to submit to backend", err);
+        errorMsg.textContent = "Submission failed: " + err.message + ". Please try again.";
+        errorMsg.classList.remove("hidden");
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit";
+        return;
       }
 
       localStorage.setItem("formData", JSON.stringify(data));
