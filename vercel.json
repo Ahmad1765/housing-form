@@ -2,7 +2,7 @@
   "version": 2,
   "rewrites": [
     {
-      "source": "/(submit|api|export|admin|result)",
+      "source": "/(submit|api|export|admin|result)(.*)",
       "destination": "/api/index.js"
     },
     {
