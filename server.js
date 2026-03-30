@@ -50,15 +50,29 @@ app.get("/result", (req, res) => {
 });
 
 app.get("/export", (req, res) => {
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
     res.download(FILE_PATH);
 });
 
 app.get("/api/data", (req, res) => {
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
+    
     let data = [];
     if (fs.existsSync(FILE_PATH)) {
-        const workbook = XLSX.readFile(FILE_PATH);
-        const sheet = workbook.Sheets["Sheet1"];
-        data = XLSX.utils.sheet_to_json(sheet);
+        try {
+            const workbook = XLSX.readFile(FILE_PATH);
+            const sheet = workbook.Sheets["Sheet1"];
+            if (sheet) {
+                data = XLSX.utils.sheet_to_json(sheet);
+            }
+        } catch (error) {
+            console.error("Error reading Excel file:", error);
+            return res.status(500).json({ error: "Failed to read data" });
+        }
     }
     res.json(data);
 });

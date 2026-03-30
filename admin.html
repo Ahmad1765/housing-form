@@ -33,7 +33,7 @@
   <script>
     async function loadDashboard() {
       try {
-        const res = await fetch('/api/data');
+        const res = await fetch('/api/data?t=' + new Date().getTime());
         const data = await res.json();
         
         const table = document.getElementById('dataTable');
